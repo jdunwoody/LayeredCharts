@@ -47,6 +47,7 @@ import UIKit
         let numRows = pointLists.count
         let numCols = pointLists[0].count
         let gridShape = buildGridShape(view: view, bounds: bounds, numCols: numCols, numRows: numRows)
+
         view.layer.addSublayer(gridShape)
 
         let pointLists = PointData.buildPointLists()

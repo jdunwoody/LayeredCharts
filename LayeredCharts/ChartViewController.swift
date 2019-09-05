@@ -14,7 +14,7 @@ class ChartViewController: UIViewController {
 
         chartView.drawChart(view: view, bounds: view.bounds, pointLists: pointLists)
 
-        signalTimer = Timer.scheduledTimer(withTimeInterval: 0.3, repeats: true, block: { (Timer) in
+        signalTimer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { (Timer) in
             self.timerFired()
         })
     }
@@ -24,11 +24,23 @@ class ChartViewController: UIViewController {
             for i in 0..<pointLists.count {
                 pointLists[i].removeFirst(1)
                 pointLists[i].append(PointData.point())
-
             }
 
-            let path = chartView.buildPath(pointLists: pointLists)
-            chartView.lineLayer!.path = path.cgPath
+            let oldPath = chartView.lineLayer!.path
+
+            let newPath = chartView.buildPath(pointLists: pointLists)
+
+            let animation = CABasicAnimation(keyPath: "path")
+            animation.duration = 0.9//CATransaction.animationDuration()
+            animation.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
+
+            animation.fromValue = oldPath
+            animation.toValue = newPath.cgPath
+            animation.fillMode = .forwards
+            animation.isRemovedOnCompletion = false
+            chartView.lineLayer!.add(animation, forKey: "pathAnimation")
+
+            //            chartView.lineLayer!.path = path.cgPath
         }
     }
 }
